@@ -1,84 +1,39 @@
 import re
-import threading
-import time
 
 import requests
 from bs4 import BeautifulSoup, SoupStrainer
 
-URL = "https://ideco.com.jo/Website/EServices/SubscriberReceivableLinks?utm_source=chatgpt.com"
+BASE = "https://ideco.com.jo"
+# الفواتير المسددة وغير المسددة أصبحتا طلبَي AJAX منفصلَين في الموقع الجديد
+PAID_URL = f"{BASE}/Website/EServices/SubscriberReceivableLinks"
+UNPAID_URL = f"{BASE}/Website/EServices/SubscriberReceivableLinksNotBuyed"
 
 _HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
         "(KHTML, like Gecko) Chrome/120.0 Safari/537.36"
-    )
+    ),
+    "X-Requested-With": "XMLHttpRequest",
+    "Referer": PAID_URL,
 }
 
 # جلسة واحدة مشتركة لكل الطلبات: تبقي اتصال HTTPS مفتوحاً (keep-alive)
-# بدل فتح اتصال جديد ومصافحة TLS كاملة مع كل طلب — التحديث الدوري للـ
-# ViewState يمر على نفس الجلسة فيبقيها "دافئة" باستمرار.
 _session = requests.Session()
 _session.headers.update(_HEADERS)
 
-# فلاتر تحليل مخصّصة: نبني شجرة DOM فقط لما نحتاجه فعلياً بدل الصفحة
-# كاملة (صفحات ASP.NET فيها __VIEWSTATE قد يصل لعشرات الكيلوبايتات).
-_HIDDEN_INPUTS_STRAINER = SoupStrainer("input", attrs={"type": "hidden"})
-_RESULT_STRAINER = SoupStrainer(("table", "input", "span"))
-
-CPH = "ctl00_ContentPlaceHolder1_"
-CUSTOMER_NO = "ctl00$ContentPlaceHolder1$txtCustomerNo"
-SUBMIT_BTN = "ctl00$ContentPlaceHolder1$btnGetInvoices2"
-CITY_SELECT = "ctl00$ContentPlaceHolder1$ddlCities"
+# الموقع الجديد يرجع جزء HTML فيه الجدول فقط — لا ViewState ولا تحديث دوري
+_RESULT_STRAINER = SoupStrainer(("table", "input", "p"))
 
 # أعمدة تُحذف من العرض لأنها روابط/فارغة
-_DROP_HEADERS = ("", "اختيار")
-
-# الـ ViewState يصلح لأي رقم اشتراك؛ نحدّثه في الخلفية كل 30 دقيقة
-_STATE_TTL = 1800
-_state_lock = threading.Lock()
-_state = {"fields": None, "time": 0.0}
+_DROP_HEADERS = ("", "اختيار", "التفاصيل")
 
 
 class IDECOFetchError(Exception):
     """تعذر الاتصال بموقع شركة الكهرباء."""
 
 
-def _fetch_page_state() -> dict:
-    try:
-        page = _session.get(URL, timeout=30)
-        page.raise_for_status()
-    except requests.RequestException as exc:
-        raise IDECOFetchError(str(exc)) from exc
-    soup = BeautifulSoup(page.text, "lxml", parse_only=_HIDDEN_INPUTS_STRAINER)
-    return {
-        h.get("name"): h.get("value", "")
-        for h in soup.find_all("input")
-        if h.get("name")
-    }
-
-
-def _get_state(force: bool = False) -> dict:
-    with _state_lock:
-        stale = time.monotonic() - _state["time"] >= _STATE_TTL
-        if _state["fields"] is None or stale or force:
-            _state["fields"] = _fetch_page_state()
-            _state["time"] = time.monotonic()
-        return dict(_state["fields"])
-
-
-def _warm_state_loop():
-    while True:
-        try:
-            _get_state()
-        except IDECOFetchError:
-            pass
-        time.sleep(_STATE_TTL)
-
-
 def start_background_refresh():
-    """تشغيل تحديث الـ ViewState دورياً ليبقى الرد بطلب واحد."""
-    t = threading.Thread(target=_warm_state_loop, daemon=True)
-    t.start()
+    """لم يعد هناك ViewState يحتاج تسخيناً؛ أبقينا الدالة لتوافق الاستدعاء."""
 
 
 def _norm(text: str) -> str:
