@@ -45,50 +45,32 @@ def _to_number(text: str):
     return float(cleaned) if re.fullmatch(r"-?\d+(\.\d+)?", cleaned) else None
 
 
-def _post_lookup(subscriber: str, fields: dict) -> BeautifulSoup:
-    payload = dict(fields)
-    payload[CUSTOMER_NO] = subscriber
-    payload[CITY_SELECT] = "-1"
-    payload[SUBMIT_BTN] = ""
+def _post_lookup(url: str, subscriber: str) -> BeautifulSoup:
     try:
-        result = _session.post(URL, data=payload, timeout=30)
+        result = _session.post(url, data={"customerNumber": subscriber}, timeout=30)
         result.raise_for_status()
     except requests.RequestException as exc:
         raise IDECOFetchError(str(exc)) from exc
     return BeautifulSoup(result.text, "lxml", parse_only=_RESULT_STRAINER)
 
 
-def _looks_valid(soup: BeautifulSoup) -> bool:
-    return (
-        soup.find("input", id=f"{CPH}txtSum") is not None
-        or soup.find("span", id=f"{CPH}lblNoInvoices") is not None
-    )
-
-
 def fetch_receivable(subscriber: str) -> dict:
-    """جلب الذمم المستحقة من موقع IDECO بطلب واحد (ViewState مخزّن مسبقاً).
+    """جلب الذمم المستحقة من موقع IDECO الجديد.
 
     Returns {"status": "found", "total": "...", "unpaid": {...}, "paid": {...}}
     or     {"status": "no_invoices", "message": "..."}
     """
-    soup = _post_lookup(subscriber, _get_state())
+    unpaid_soup = _post_lookup(UNPAID_URL, subscriber)
+    paid_soup = _post_lookup(PAID_URL, subscriber)
 
-    # ViewState منتهي الصلاحية؟ جدّده وأعد المحاولة مرة واحدة
-    if not _looks_valid(soup):
-        soup = _post_lookup(subscriber, _get_state(force=True))
-
-    no_msg = soup.find("span", id=f"{CPH}lblNoInvoices")
-    if no_msg and _norm(no_msg.get_text()):
-        return {"status": "no_invoices", "message": _norm(no_msg.get_text())}
-
-    unpaid = _extract_grid(soup, kind="unpaid")
-    paid = _extract_grid(soup, kind="paid")
+    unpaid = _extract_grid(unpaid_soup, kind="unpaid")
+    paid = _extract_grid(paid_soup, kind="paid")
     if unpaid is None and paid is None:
         return {"status": "no_invoices", "message": "لا توجد فواتير لهذا الاشتراك"}
 
     return {
         "status": "found",
-        "total": _extract_total(soup, unpaid),
+        "total": _extract_total(unpaid_soup, unpaid),
         "unpaid": unpaid,
         "paid": paid,
     }
@@ -97,8 +79,7 @@ def fetch_receivable(subscriber: str) -> dict:
 def _extract_grid(soup: BeautifulSoup, kind: str):
     """استخراج جدول الفواتير (غير المسددة أو المسددة) من الصفحة.
 
-    جدول غير المسددة يحوي "القيمة المطلوبة" دون "القيمة المسددة".
-    جدول المسددة يحوي "القيمة المسددة".
+    جدول المسددة يحوي "القيمة المسددة"، وجدول غير المسددة لا يحويها.
     """
     for table in soup.find_all("table"):
         if table.find("table"):  # تخطَّ جداول التخطيط الحاوية لجداول أخرى
@@ -116,19 +97,23 @@ def _extract_grid(soup: BeautifulSoup, kind: str):
             cells = [_norm(td.get_text()) for td in tr.find_all("td")]
             if cells and any(cells):
                 rows.append([cells[i] if i < len(cells) else "" for i in keep])
+        if not rows:
+            continue  # جدول بلا بيانات = لا فواتير من هذا النوع
         return {"headers": [headers[i] for i in keep], "rows": rows}
     return None
 
 
 def _extract_total(soup: BeautifulSoup, unpaid: dict | None):
-    """قراءة "مجموع الذمم" من الحقل الرسمي txtSum، وإن غاب نجمع القيم المطلوبة."""
-    txt_sum = soup.find("input", id=f"{CPH}txtSum")
-    if txt_sum and txt_sum.get("value", "").strip():
-        return txt_sum["value"].strip()
+    """قراءة "مجموع الذمم" من الحقل الرسمي، وإن غاب نجمع القيم المتبقية."""
+    for p in soup.find_all("p"):
+        if "مجموع الذمم" in _norm(p.get_text()):
+            field = p.find("input")
+            if field and field.get("value", "").strip():
+                return field["value"].strip()
 
     if unpaid:
         idx = next(
-            (i for i, h in enumerate(unpaid["headers"]) if h == "القيمة المطلوبة"),
+            (i for i, h in enumerate(unpaid["headers"]) if h == "القيمة المتبقية"),
             None,
         )
         if idx is not None:
