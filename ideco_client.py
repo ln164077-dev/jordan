@@ -5,7 +5,7 @@ import time
 import requests
 from bs4 import BeautifulSoup, SoupStrainer
 
-URL = "https://www.ideco.com.jo/portal/WebForms/SubscriberReceivableLinks.aspx"
+URL = "https://ideco.com.jo/Website/EServices/SubscriberReceivableLinks?utm_source=chatgpt.com"
 
 _HEADERS = {
     "User-Agent": (
